@@ -65,6 +65,7 @@ def generate_response():
                     os.remove(temp_path)
 
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
