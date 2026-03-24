@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from google import genai
+from google.genai import types
 import os
 import tempfile
 
@@ -48,11 +49,17 @@ def generate_response():
                 # Upload to Google's servers
                 uploaded_file = client.files.upload(path=temp_path)
                 
-                # Ask Gemini to process both the prompt and the audio file
+                # STRICT FORMATTING: Force the SDK to recognize this as a remote File URI
+                audio_part = types.Part.from_uri(
+                    file_uri=uploaded_file.uri,
+                    mime_type=uploaded_file.mime_type
+                )
+                
+                # Ask Gemini to process both the prompt and the explicitly formatted audio part
                 response = client.models.generate_content(
                     model='gemini-2.5-flash',
-                    contents=[user_prompt, uploaded_file],
-                    config=genai.types.GenerateContentConfig(system_instruction=system_instruction)
+                    contents=[user_prompt, audio_part],
+                    config=types.GenerateContentConfig(system_instruction=system_instruction)
                 )
                 
                 # Delete the file from Google's servers to save space
