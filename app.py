@@ -46,7 +46,7 @@ def generate_response():
             
             try:
                 # Upload to Google's servers
-                uploaded_file = client.files.upload(file=temp_path)
+                uploaded_file = client.files.upload(path=temp_path)
                 
                 # Ask Gemini to process both the prompt and the audio file
                 response = client.models.generate_content(
