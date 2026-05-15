@@ -11,8 +11,12 @@ CORS(app)
 MY_SERVER_SECRET = os.environ.get("MY_SERVER_SECRET")
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
-@app.route('/generate', methods=['POST'])
+@app.route('/generate', methods=['POST', 'OPTIONS'])
 def generate_response():
+
+    if request.method == 'OPTIONS':
+        return jsonify({}), 200
+        
     # 1. The Security Bouncer
     provided_key = request.headers.get('X-API-Key')
     if not provided_key or provided_key != MY_SERVER_SECRET:
