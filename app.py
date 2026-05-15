@@ -6,7 +6,7 @@ import os
 import tempfile
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}}, allow_headers=["Content-Type", "X-API-Key", "Authorization"])
 
 MY_SERVER_SECRET = os.environ.get("MY_SERVER_SECRET")
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
