@@ -1,22 +1,16 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 from google import genai
 from google.genai import types
 import os
 import tempfile
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}}, allow_headers=["Content-Type", "X-API-Key", "Authorization"])
 
 MY_SERVER_SECRET = os.environ.get("MY_SERVER_SECRET")
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
-@app.route('/generate', methods=['POST', 'OPTIONS'])
+@app.route('/generate', methods=['POST'])
 def generate_response():
-
-    if request.method == 'OPTIONS':
-        return jsonify({}), 200
-        
     # 1. The Security Bouncer
     provided_key = request.headers.get('X-API-Key')
     if not provided_key or provided_key != MY_SERVER_SECRET:
